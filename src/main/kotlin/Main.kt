@@ -14,7 +14,7 @@ import androidx.compose.ui.window.application
 @Composable
 @Preview
 fun App() {
-    var appbarTitle by remember { mutableStateOf("SOPHiA Plugin") }
+    val appbarTitle: String = "SOPHiA Plugin"
 
     MaterialTheme {
         MainView(appbarTitle)

@@ -20,6 +20,8 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    implementation(compose.materialIconsExtended)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
 }
 
 compose.desktop {
@@ -30,6 +32,12 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "sophia"
             packageVersion = "1.0.0"
+
+            windows {
+                menu = true
+                // see https://wixtoolset.org/documentation/manual/v3/howtos/general/generate_guids.html
+                upgradeUuid = "61DAB35E-17CB-43B0-81D5-B30E1C0830FA"
+            }
         }
     }
 }
