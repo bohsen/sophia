@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 
 val LocalAppResources = staticCompositionLocalOf<AppResources> {
-    error("LocalNotepadResources isn't provided")
+    error("LocalAppResources isn't provided")
 }
 
 @Composable

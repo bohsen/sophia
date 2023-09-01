@@ -33,6 +33,9 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "sophia"
             packageVersion = "1.0.0"
+            description = "Automatically upload sequencer results to SOPHiA Genetics Cloud analytics service"
+            copyright = "© 2023 Region Nordjylland, Denmark. All rights reserved."
+            vendor = "Thomas Bohsen Schmidt"
 
             windows {
                 menu = true
