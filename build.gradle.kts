@@ -1,5 +1,11 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
+buildscript {
+    dependencies {
+        classpath(libs.molecule.gradle.plugin)
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.composeMultiplatform)
@@ -12,6 +18,7 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
+    maven("https://repository.apache.org/snapshots")
 }
 
 dependencies {
@@ -22,7 +29,13 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.materialIconsExtended)
     implementation(libs.coroutines.swing)
+    implementation(libs.molecule.runtime)
+    implementation(libs.bundles.log4j2)
+    implementation(libs.log4j2.kotlin)
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.okio)
+    testImplementation(libs.turbine)
 }
 
 compose.desktop {

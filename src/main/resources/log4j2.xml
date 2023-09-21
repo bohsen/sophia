@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="Sophia" status="error">
+    <Appenders>
+        <Console name="Console">
+            <PatternLayout>
+                <Pattern>%d %5p [%t] %C{1}.%M(%F:%L) - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
