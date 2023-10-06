@@ -18,7 +18,6 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
-    maven("https://repository.apache.org/snapshots")
 }
 
 dependencies {
