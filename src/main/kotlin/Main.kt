@@ -34,6 +34,7 @@ val appbarTitle: String
 @Composable
 @Preview
 fun ApplicationScope.App() {
+    val watchService = WatchService()
     MaterialTheme {
         MainView()
         if (isTraySupported) {
