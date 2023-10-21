@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
+/src/test/resources/sophia.txt
 .idea/*.xml
 .idea/libraries/
 *.iws
