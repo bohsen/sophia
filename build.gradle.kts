@@ -9,6 +9,7 @@ buildscript {
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 group = "dk.rn.plugins"
@@ -32,9 +33,12 @@ dependencies {
     implementation(libs.molecule.runtime)
     implementation(libs.bundles.log4j2)
     implementation(libs.log4j2.kotlin)
+    implementation(libs.bundles.multiplatform.settings)
+    implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.multiplatform.settings.test)
 }
 
 compose.desktop {
