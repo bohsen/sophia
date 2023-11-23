@@ -6,6 +6,7 @@ build/
 
 ### IntelliJ IDEA ###
 /src/test/resources/sophia.txt
+/src/test/resources/card-83329.pdf
 .idea/*.xml
 .idea/libraries/
 *.iws
