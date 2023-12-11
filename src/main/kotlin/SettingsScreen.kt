@@ -26,7 +26,7 @@ import theme.*
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun FrameWindowScope.SettingsScreen() {
+fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
     val openSetDirectory = remember { mutableStateOf(false) }
 
     Surface(color = BackgroundColor, modifier = Modifier.fillMaxSize()) {
@@ -39,7 +39,7 @@ fun FrameWindowScope.SettingsScreen() {
     }
 
     if (openSetDirectory.value) {
-        FileChooserDialog("Vælg mappe", {})
+        FileChooserDialog("Vælg mappe", {}, onCloseRequest = { openSetDirectory.value = false })
     }
 }
 

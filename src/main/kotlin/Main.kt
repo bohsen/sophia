@@ -5,13 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Colors
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
@@ -34,7 +30,9 @@ fun main() = application {
 @Preview
 fun ApplicationScope.App() {
     // val watchService = WatchService()
+    val presenter = AppPresenter()
     val scope = rememberCoroutineScope()
+
     val showSettings = remember { mutableStateOf(false) }
     val openLogs = remember { mutableStateOf(false) }
 
@@ -58,7 +56,7 @@ fun ApplicationScope.App() {
                 }
             }
         ) {
-            SettingsScreen()
+            SettingsScreen(onCloseRequest = { showSettings.value = false })
         }
     }
 }
@@ -87,6 +85,7 @@ fun ApplicationScope.Tray(
 }
 
 @Composable
+@Preview
 private fun LogsListView(modifier: Modifier = Modifier, logs: List<CommandOutput>) {
     LazyColumn(modifier) {
         items(logs) {
@@ -117,4 +116,9 @@ private fun MenuScope.ApplicationMenu(
     Item("Logfiler", onClick = onOpenLogs)
     Separator()
     Item("Afslut", onClick = onCloseRequest)
+}
+
+sealed interface Model {
+    data object Initializing : Model
+    data class Processing(val logs: List<String>, val uploads: List<String>)
 }
