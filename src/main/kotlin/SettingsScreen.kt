@@ -3,10 +3,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountBox
-import androidx.compose.material.icons.outlined.ArrowRight
-import androidx.compose.material.icons.outlined.Contacts
-import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,12 +25,14 @@ import theme.*
 @Composable
 fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
     val openSetDirectory = remember { mutableStateOf(false) }
+    val openPipelinesSetting = remember { mutableStateOf(false) }
 
     Surface(color = BackgroundColor, modifier = Modifier.fillMaxSize()) {
         Column {
             HeaderText()
             ProfileCardUI()
-            GeneralOptionsUI(onSetDirectory = { openSetDirectory.value = true })
+            GeneralOptionsUI(onSetDirectory = { openSetDirectory.value = true },
+                onOpenPipelinesSetting = { openPipelinesSetting.value = true })
             SupportOptionsUI()
         }
     }
@@ -124,7 +123,10 @@ fun ProfileCardUI() {
 @ExperimentalMaterialApi
 @Preview
 @Composable
-fun GeneralOptionsUI(onSetDirectory: () -> Unit) {
+fun GeneralOptionsUI(
+    onSetDirectory: () -> Unit,
+    onOpenPipelinesSetting: () -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -142,8 +144,13 @@ fun GeneralOptionsUI(onSetDirectory: () -> Unit) {
         GeneralSettingItem(
             icon = Icons.Outlined.FolderOpen,
             mainText = "Analysemappe",
-            subText = "Sti til mappe, hvor analyseresultater gemmes "
+            subText = "Sti til mappe, hvor analyseresultater gemmes"
         ) { onSetDirectory() }
+        GeneralSettingItem(
+            icon = Icons.Outlined.AccountTree,
+            mainText = "Pipelines",
+            subText = "Konfiguration af pipelines mapninger"
+        ) { onOpenPipelinesSetting() }
     }
 }
 
