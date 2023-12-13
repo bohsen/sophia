@@ -25,7 +25,7 @@ interface KeyValueStore {
 }
 
 @Serializable
-data class UserInfo(val username: String)
+data class UserInfo(val userId: Int, val username: String, val clientId: Int)
 
 @Serializable
 data class Pipelines(val map: Map<String, Int>) {
@@ -37,6 +37,19 @@ data class Pipelines(val map: Map<String, Int>) {
         return map[key]
     }
 }
+
+@Serializable
+data class Pipeline(
+    val pipeline_id: Int,
+    val pipeline_name: String,
+    val analysis_type: String,
+    val analysis_type_id: Int,
+    val kit: String,
+    val sequencer_id: Int,
+    val sequencer: String,
+    val experiment_type: String,
+    val pairend: Boolean
+)
 
 @OptIn(ExperimentalSettingsApi::class, ExperimentalSerializationApi::class)
 private class KeyValueStoreImpl(provider: () -> Settings) : KeyValueStore {
