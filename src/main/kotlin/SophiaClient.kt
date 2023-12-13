@@ -29,9 +29,11 @@ class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()
             "Login started..."
         }
         return if (isWindows) {
-            TODO("Handle login and input of keycard")
-            // python.exe C:\SOPHiA\sg-upload-v2-wrapper.py login -u d.lundsted@rn.dk -p
-            // Handle input of keycard
+            processHandler.execute(
+                "python.exe",
+                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
+                "login -u $username -p"
+            )
         } else {
             processHandler.execute(
                 "python3",
@@ -41,7 +43,43 @@ class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()
         }
     }
 
+    fun getUserInfo(): CommandOutput {
+        logger.info {
+            "getUserInfo() started..."
+        }
+        return if (isWindows) {
+            processHandler.execute(
+                "python.exe",
+                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
+                "userInfo"
+            )
+        } else {
+            processHandler.execute(
+                "python3",
+                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
+                "userInfo"
+            )
+        }
+    }
 
+    fun getPipelines(): CommandOutput {
+        logger.info {
+            "getPipelines() started..."
+        }
+        return if (isWindows) {
+            processHandler.execute(
+                "python.exe",
+                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
+                "pipeline --list"
+            )
+        } else {
+            processHandler.execute(
+                "python3",
+                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
+                "pipeline --list"
+            )
+        }
+    }
     fun prepareRun(path: Path, pipeline: Int): CommandOutput {
         logger.info("Preparing run")
         TODO("PS C:\\SOPHiA> python.exe .\\sg-upload-v2-wrapper.py new -j .\\ade.json")

@@ -54,7 +54,7 @@ class KeyValueStoreTest {
 
     @Test
     fun `keyValueStore should contain UserInfo when set`() {
-        val expected = UserInfo("Thomas")
+        val expected = UserInfo(405, "dnoble", 12)
         settings.userInfo = expected
         assertThat(settings.userInfo).isEqualTo(expected)
     }
