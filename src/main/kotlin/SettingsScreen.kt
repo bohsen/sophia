@@ -26,15 +26,20 @@ import theme.*
 fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
     val openSetDirectory = remember { mutableStateOf(false) }
     val openPipelinesSetting = remember { mutableStateOf(false) }
+    val tokenCardRead = remember { mutableStateOf(false) }
 
     Surface(color = BackgroundColor, modifier = Modifier.fillMaxSize()) {
         Column {
             HeaderText()
-            ProfileCardUI()
+            ProfileCardUI(onTokencardRead = { tokenCardRead.value = true })
             GeneralOptionsUI(onSetDirectory = { openSetDirectory.value = true },
                 onOpenPipelinesSetting = { openPipelinesSetting.value = true })
             SupportOptionsUI()
         }
+    }
+
+    if (tokenCardRead.value) {
+        FileChooserDialog("Vælg tokencard", {}, onCloseRequest = { tokenCardRead.value = false })
     }
 
     if (openSetDirectory.value) {
@@ -58,7 +63,7 @@ fun HeaderText() {
 }
 
 @Composable
-fun ProfileCardUI() {
+fun ProfileCardUI(onTokencardRead: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +96,7 @@ fun ProfileCardUI() {
 
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
-                    onClick = {},
+                    onClick = { onTokencardRead() },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = PrimaryColor
                     ),
@@ -103,7 +108,7 @@ fun ProfileCardUI() {
                     shape = Shapes.medium
                 ) {
                     Text(
-                        text = "Åbn",
+                        text = "Token card",
                         fontFamily = Poppins,
                         color = SecondaryColor,
                         fontSize = 12.sp,
