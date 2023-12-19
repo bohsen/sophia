@@ -1,13 +1,17 @@
+import com.russhwolf.settings.MapSettings
 import okio.buffer
 import okio.source
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import java.io.FileNotFoundException
 
 class SophiaClientTest {
     private val fakeProcessHandler = FakeProcessHandler()
-    private val service = SophiaClient(fakeProcessHandler)
+    private val provider = { MapSettings() }
+    private val settings = KeyValueStore(provider)
+    private val service = SophiaClient(fakeProcessHandler, settings)
 
     @JvmField
     @Rule
@@ -34,12 +38,47 @@ class SophiaClientTest {
 
     @Test
     fun `when login with correct user should ask for token`() {
-        val pythonInstalled = service.login(getResourceAsStream("sophia.txt"))
+        val expectedCommandOutput = CommandOutput(true, "")
+        val loginResult = service.login(getStringFromFile("sophia.txt", true))
+        assertEquals(expectedCommandOutput, loginResult)
     }
 
-    private fun getResourceAsStream(file: String): String {
-        return this.javaClass.classLoader.getResourceAsStream(file)!!.source().buffer().use { source ->
-            source.readUtf8()
+    private fun getResourceAsStream(file: String, debug: Boolean = false): String {
+        val classLoader = this.javaClass.classLoader
+        if (classLoader != null) {
+            try {
+                val inputString =
+                    this.javaClass.classLoader.getResourceAsStream(file)!!.source().buffer().use { source ->
+                        source.readUtf8()
+                    }
+                if (debug) println("Output from inputfile is: $inputString")
+                return inputString
+            } catch (e: FileNotFoundException) {
+                println("Could not find the specified file: $file")
+                throw e
+            }
+        } else {
+            throw IllegalStateException(
+                """Classloader is null. Can't open an inputstream for the specified file: $file without it."""
+            )
+        }
+    }
+
+    internal fun getStringFromFile(filePath: String, debug: Boolean = false): String {
+        val classLoader = this.javaClass.classLoader
+        if (classLoader != null) {
+            try {
+                val inputString = classLoader.getResourceAsStream(filePath).bufferedReader().use { it.readText() }
+                if (debug) println("Output from inputfile is: $inputString")
+                return inputString
+            } catch (e: FileNotFoundException) {
+                println("Could not find the specified file: $filePath")
+                throw e
+            }
+        } else {
+            throw IllegalStateException(
+                """Classloader is null. Can't open an inputstream for the specified file: $filePath without it."""
+            )
         }
     }
 

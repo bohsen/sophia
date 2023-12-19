@@ -31,6 +31,10 @@ private class ProcessHandlerImpl : ProcessHandler {
     private val logger = logger()
 
     override fun execute(vararg command: String): CommandOutput {
+        logger.debug {
+            command.reduce { a, b -> "$a $b" }
+        }
+
         val builder = ProcessBuilder()
         builder.redirectErrorStream(true)
         val process = builder.command(*command).start()

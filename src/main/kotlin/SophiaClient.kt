@@ -1,3 +1,4 @@
+import com.russhwolf.settings.Settings
 import org.apache.logging.log4j.kotlin.logger
 import java.io.File
 import java.nio.file.Path
@@ -7,7 +8,10 @@ import java.util.*
 /**
  * Client for interacting with SOPHiA CLI tool
  */
-class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()) {
+class SophiaClient(
+    private val processHandler: ProcessHandler = ProcessHandler(),
+    private val settings: KeyValueStore = KeyValueStore()
+) {
 
     private val logger = logger()
 
@@ -133,7 +137,8 @@ class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()
 
 
     private fun resolvePythonScriptPath(filename: String): String {
-        val file = File("src/test/resources/$filename")
-        return file.absolutePath
+        val file = File("src/main/resources/$filename")
+        logger.debug(file)
+        return "\'" + file.absolutePath + "\'"
     }
 }
