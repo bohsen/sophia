@@ -1,5 +1,4 @@
 import org.apache.logging.log4j.kotlin.logger
-import java.io.File
 import java.nio.file.Path
 import java.util.*
 
@@ -7,9 +6,13 @@ import java.util.*
 /**
  * Client for interacting with SOPHiA CLI tool
  */
-class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()) {
+class SophiaClient(
+    private val processHandler: ProcessHandler = ProcessHandler(),
+    private val settings: KeyValueStore = KeyValueStore()
+) {
 
     private val logger = logger()
+    private val path = resolvePythonScriptPath()
 
     /**
      * Check that dependencies like Python is installed
@@ -17,69 +20,40 @@ class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()
     fun dependencyCheck(): CommandOutput {
         logger.info("Dependency check started")
         logger.info("Checking that Python is installed")
-        return if (isWindows) {
-            processHandler.execute("python.exe", "--version")
-        } else {
-            processHandler.execute("python3", "--version")
-        }
+        return processHandler.execute(getPythonExe(), "--version")
     }
 
-    fun login(username: String): CommandOutput {
+    fun login(username: String, tokenCard: TokenCard): CommandOutput {
         logger.info {
             "Login started..."
         }
-        return if (isWindows) {
-            processHandler.execute(
-                "python.exe",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "login -u $username -p"
-            )
-        } else {
-            processHandler.execute(
-                "python3",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "login -u $username -p"
-            )
-        }
+
+        return processHandler.execute(LoginProcessParser(tokenCard))
     }
 
     fun getUserInfo(): CommandOutput {
         logger.info {
             "getUserInfo() started..."
         }
-        return if (isWindows) {
-            processHandler.execute(
-                "python.exe",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "userInfo"
-            )
-        } else {
-            processHandler.execute(
-                "python3",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "userInfo"
-            )
-        }
+        return processHandler.execute(
+            getPythonExe(),
+            resolvePythonScriptPath(),
+            "userInfo"
+        )
     }
+
 
     fun getPipelines(): CommandOutput {
         logger.info {
             "getPipelines() started..."
         }
-        return if (isWindows) {
-            processHandler.execute(
-                "python.exe",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "pipeline --list"
-            )
-        } else {
-            processHandler.execute(
-                "python3",
-                resolvePythonScriptPath("sg_upload-v2-wrapper.py"),
-                "pipeline --list"
-            )
-        }
+        return processHandler.execute(
+            getPythonExe(),
+            resolvePythonScriptPath(),
+            "pipeline --list"
+        )
     }
+
     fun prepareRun(path: Path, pipeline: Int): CommandOutput {
         logger.info("Preparing run")
         TODO("PS C:\\SOPHiA> python.exe .\\sg-upload-v2-wrapper.py new -j .\\ade.json")
@@ -129,11 +103,22 @@ class SophiaClient(private val processHandler: ProcessHandler = ProcessHandler()
     private val isWindows = System.getProperty("os.name")
         .lowercase(Locale.getDefault()).startsWith("windows")
 
-    // private val uploadScript =
+    private fun getPythonExe() = if (isWindows) {
+        "python.exe"
+    } else {
+        "python3"
+    }
 
+    private fun resolvePythonScriptPath() = getFilePath("sg-upload-v2-wrapper.py")
 
-    private fun resolvePythonScriptPath(filename: String): String {
-        val file = File("src/test/resources/$filename")
-        return file.absolutePath
+    private fun getPwFile(): String = getFilePath("pw.txt")
+
+    private fun getFilePath(filename: String): String {
+        val classLoader = this.javaClass.classLoader
+        val path = classLoader.getResource(filename)?.path
+        logger.debug {
+            "Path: $path"
+        }
+        return path.orEmpty()
     }
 }
