@@ -35,7 +35,7 @@ dependencies {
     implementation(libs.log4j2.kotlin)
     implementation(libs.bundles.multiplatform.settings)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.pdfbox)
+    implementation(libs.itext)
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.coroutines.test)
