@@ -83,4 +83,10 @@ class KeyValueStoreTest {
         val pipelines = Pipelines(mapOf("SST" to 1811, "STS" to 42))
         assertThat(pipelines["SST"]).isEqualTo(1811)
     }
+
+    @Test
+    fun `should contain TokenCard when added`() {
+        val expectedTokenCard = TODO()
+        assertThat(settings.tokenCard).isEqualTo(expectedTokenCard)
+    }
 }

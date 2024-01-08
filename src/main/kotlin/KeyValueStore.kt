@@ -16,6 +16,8 @@ interface KeyValueStore {
 
     var userInfo: UserInfo?
 
+    var tokenCard: TokenCard?
+
     var pipelines: Pipelines?
     fun reset()
 
@@ -70,6 +72,15 @@ private class KeyValueStoreImpl(provider: () -> Settings) : KeyValueStore {
                 settings.encodeValue(UserInfo.serializer(), "Userinfo", value)
             } else {
                 settings.remove("Userinfo")
+            }
+        }
+    override var tokenCard: TokenCard?
+        get() = settings.decodeValueOrNull(TokenCard.serializer(), "TokenCard")
+        set(value) {
+            if (value != null) {
+                settings.encodeValue(TokenCard.serializer(), "TokenCard", value)
+            } else {
+                settings.remove("TokenCard")
             }
         }
     override var pipelines: Pipelines?
