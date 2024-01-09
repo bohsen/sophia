@@ -30,8 +30,9 @@ fun main() = application {
 @Preview
 fun ApplicationScope.App() {
     // val watchService = WatchService()
-    val presenter = AppPresenter()
     val scope = rememberCoroutineScope()
+    val presenter = AppPresenter(scope)
+
 
     val showSettings = remember { mutableStateOf(false) }
     val openLogs = remember { mutableStateOf(false) }
@@ -81,28 +82,6 @@ fun ApplicationScope.Tray(
                 )
             }
         )
-    }
-}
-
-@Composable
-@Preview
-private fun LogsListView(modifier: Modifier = Modifier, logs: List<CommandOutput>) {
-    LazyColumn(modifier) {
-        items(logs) {
-            Box(
-                Modifier.padding(bottom = 5.dp)
-                    .background(
-                        BackgroundColor, shape = RoundedCornerShape(100.dp)
-                    )
-            ) {
-                Text(
-                    text = it.logs.toString(),
-                    color = md_theme_light_onPrimaryContainer,
-                    modifier = Modifier.padding(5.dp),
-                    fontSize = 14.sp
-                )
-            }
-        }
     }
 }
 
