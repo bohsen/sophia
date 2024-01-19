@@ -1,4 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     dependencies {
@@ -29,8 +31,8 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.materialIconsExtended)
     implementation(libs.coroutines.swing)
-    implementation(libs.okio)
     implementation(libs.molecule.runtime)
+    implementation(libs.okio)
     implementation(libs.bundles.log4j2)
     implementation(libs.log4j2.kotlin)
     implementation(libs.bundles.multiplatform.settings)
