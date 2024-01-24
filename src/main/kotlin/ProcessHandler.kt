@@ -1,6 +1,6 @@
-import org.apache.logging.log4j.kotlin.logger
+import okio.buffer
+import okio.source
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 /**
@@ -32,7 +32,7 @@ interface ProcessHandler {
         companion object {
             operator fun invoke(vararg command: String): ProcessParser = DefaultProcessParser(*command)
 
-            internal val isWindows = System.getProperty("os.name")
+            private val isWindows = System.getProperty("os.name")
                 .lowercase(Locale.getDefault()).startsWith("windows")
 
             internal val python = if (isWindows) {
@@ -42,13 +42,19 @@ interface ProcessHandler {
             }
 
             internal val resolvePythonScriptPath = getFilePath("sg-upload-v2-wrapper.py")
-
+            internal val user = readFile("user.txt")
             internal val pwFromFile: String = getFilePath("pw.txt")
 
-            internal fun getFilePath(filename: String): String {
+            private fun getFilePath(filename: String): String {
                 val classLoader = this::class.java.classLoader
                 val path = classLoader.getResource(filename)?.path
                 return path.orEmpty()
+            }
+
+            private fun readFile(filename: String): String {
+                val classLoader = this::class.java
+                val file = classLoader.getResourceAsStream(filename).source().buffer()
+                return file.readUtf8()
             }
         }
     }
@@ -59,25 +65,41 @@ private class DefaultProcessParser(vararg command: String) : ProcessHandler.Proc
     override val command: List<String> = listOf(*command)
 
     override fun parse(): CommandOutput {
-        logger.debug {
-            "Execute command: ${command.reduce { a, b -> "$a $b" }}"
-        }
 
         val builder = ProcessBuilder()
-        builder.redirectErrorStream(true)
 
         val process = builder.command(command).start()
 
-        val exitCode = process.waitFor(3L, TimeUnit.SECONDS)
+        var logs = ""
+        process.inputStream.reader().buffered().use { stream ->
+            stream.lines().forEach { logs += it }
+        }
 
-        return CommandOutput(exitCode, "Test")
+        var error = ""
+        process.errorStream.reader().buffered().use { stream ->
+            stream.lines().forEach { error += it }
+        }
+
+        val exitCode = process.onExit().get().exitValue()
+
+        return if (error.isEmpty() && exitCode == 0) {
+            CommandOutput.Success(logs)
+        } else if (error.isNotEmpty() && exitCode == 0) {
+            CommandOutput.Error(error)
+        } else {
+            CommandOutput.FailedCommand(logs)
+        }
     }
 }
 
 /**
  * Wrapper class for exposing the result of a shell command
  */
-data class CommandOutput(val exitCode: Boolean, val logs: String?)
+sealed interface CommandOutput {
+    data class Success(val logMessage: String?) : CommandOutput
+    data class Error(val error: String) : CommandOutput
+    data class FailedCommand(val error: String) : CommandOutput
+}
 
 /**
  * Default implementation for executing shell commands. Uses ProcessBuilder internally.
