@@ -1,11 +1,10 @@
+import Functions.Companion.readFile
+import com.google.common.truth.Truth.assertThat
 import com.russhwolf.settings.MapSettings
-import okio.buffer
-import okio.source
-import org.junit.Assert.*
+import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import java.io.FileNotFoundException
 
 class SophiaClientTest {
     private val fakeProcessHandler = FakeProcessHandler()
@@ -31,7 +30,7 @@ class SophiaClientTest {
     @Test
     fun `when python installed should not report an error`() {
         val pythonInstalled = service.dependencyCheck()
-        assertTrue(pythonInstalled.exitCode)
+        assertThat(pythonInstalled).isInstanceOf(CommandOutput.Success::class.java)
     }
 
     @Test
@@ -42,66 +41,25 @@ class SophiaClientTest {
 
     @Test
     fun `when executed command fails should report failed output`() {
-        val expectedCommandOutput = CommandOutput(false, "Unknown option: '-userInfo'")
+        val expectedCommandOutput = CommandOutput.FailedCommand("Unknown option: '-userInfo'")
         fakeProcessHandler.function = { expectedCommandOutput }
-        assertEquals(expectedCommandOutput, service.dependencyCheck())
+        assertThat(service.dependencyCheck()).isEqualTo(expectedCommandOutput)
     }
 
     @Test
-    fun `when login with correct user should ask for token`() {
-        val expectedCommandOutput = CommandOutput(
-            true,
-            """Script is up-to-date (checksum 3ec45b3f8b3d5e0a691ade413e2e8f8a)
-                Provide token for coordinate [3, E]:""".trimIndent()
-        )
-        val loginResult = service.login(getStringFromFile("sophia.txt", true), fakeTokenCard)
-        assertEquals(expectedCommandOutput, loginResult)
+    fun `when login with valid user should log in`() {
+        val expectedCommandOutput = CommandOutput.Success("Log in success")
+
+        val tokenCard = TokenCardExtractor().extractTokenCard(readFile("TokenCard.txt"))
+        val parser = LoginProcessParser(tokenCard)
+        assertThat(service.login(parser)).isEqualTo(expectedCommandOutput)
     }
 
     @Test
     fun `when requesting userinfo should return userinfo`() {
-        val expectedCommandOutput = CommandOutput(true, "")
+        val expectedCommandOutput = CommandOutput.Success("")
         val userInfoResult = service.getUserInfo()
-        assertEquals(expectedCommandOutput, userInfoResult)
-    }
-
-    private fun getResourceAsStream(file: String, debug: Boolean = false): String {
-        val classLoader = this.javaClass.classLoader
-        if (classLoader != null) {
-            try {
-                val inputString =
-                    this.javaClass.classLoader.getResourceAsStream(file)!!.source().buffer().use { source ->
-                        source.readUtf8()
-                    }
-                if (debug) println("Output from inputfile is: $inputString")
-                return inputString
-            } catch (e: FileNotFoundException) {
-                println("Could not find the specified file: $file")
-                throw e
-            }
-        } else {
-            throw IllegalStateException(
-                """Classloader is null. Can't open an inputstream for the specified file: $file without it."""
-            )
-        }
-    }
-
-    private fun getStringFromFile(filePath: String, debug: Boolean = false): String {
-        val classLoader = this.javaClass.classLoader
-        if (classLoader != null) {
-            try {
-                val inputString = classLoader.getResourceAsStream(filePath).bufferedReader().use { it.readText() }
-                if (debug) println("Output from inputfile is: $inputString")
-                return inputString
-            } catch (e: FileNotFoundException) {
-                println("Could not find the specified file: $filePath")
-                throw e
-            }
-        } else {
-            throw IllegalStateException(
-                """Classloader is null. Can't open an inputstream for the specified file: $filePath without it."""
-            )
-        }
+        assertThat(userInfoResult).isEqualTo(expectedCommandOutput)
     }
 
     class FakeProcessHandler : ProcessHandler {

@@ -12,7 +12,6 @@ class SophiaClient(
 ) {
 
     private val logger = logger()
-    private val path = resolvePythonScriptPath()
 
     /**
      * Check that dependencies like Python is installed
@@ -23,12 +22,12 @@ class SophiaClient(
         return processHandler.execute(getPythonExe(), "--version")
     }
 
-    fun login(username: String, tokenCard: TokenCard): CommandOutput {
+    fun login(loginProcessParser: LoginProcessParser): CommandOutput {
         logger.info {
             "Login started..."
         }
 
-        return processHandler.execute(LoginProcessParser(tokenCard))
+        return processHandler.execute(loginProcessParser)
     }
 
     fun getUserInfo(): CommandOutput {
@@ -100,6 +99,7 @@ class SophiaClient(
         TODO()
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private val isWindows = System.getProperty("os.name")
         .lowercase(Locale.getDefault()).startsWith("windows")
 
@@ -116,9 +116,6 @@ class SophiaClient(
     private fun getFilePath(filename: String): String {
         val classLoader = this.javaClass.classLoader
         val path = classLoader.getResource(filename)?.path
-        logger.debug {
-            "Path: $path"
-        }
         return path.orEmpty()
     }
 }

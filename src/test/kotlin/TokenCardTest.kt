@@ -1,8 +1,6 @@
-import org.junit.Test
 import com.google.common.truth.Truth.assertThat
-
-
-import org.junit.Assert.*
+import org.junit.Assert.assertThrows
+import org.junit.Test
 
 class TokenCardTest {
     private val tokenMap: Map<String, List<String>> = mapOf(
@@ -18,26 +16,31 @@ class TokenCardTest {
     private val tokenCard = TokenCard(14567, "Test Peter Testesen", "Feb 28, 2025", tokenMap)
 
     @Test
-    fun `should get token A1`() {
+    fun `should get token 1A`() {
         val expectedToken = "iuh7"
-        assertThat(tokenCard.getToken("A1")).isEqualTo(expectedToken)
+        assertThat(tokenCard.getToken("1A")).isEqualTo(expectedToken)
     }
 
     @Test
-    fun `should get token H8`() {
+    fun `should get token 8H`() {
         val expectedToken = "si82"
-        assertThat(tokenCard.getToken("H8")).isEqualTo(expectedToken)
+        assertThat(tokenCard.getToken("8H")).isEqualTo(expectedToken)
     }
 
+    @Test
+    fun `when coordinate lengt greater than 2 should throw`() {
+        val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("11A") }
+        assertThat(e).hasMessageThat().isEqualTo("coordinate length greater than 2 not allowed")
+    }
     @Test
     fun `when first character in coordinate out of range should throw`() {
-        val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("L1") }
-        assertThat(e).hasMessageThat().isEqualTo("coordinate not in range A to H. Was L")
+        val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("9A") }
+        assertThat(e).hasMessageThat().isEqualTo("coordinate not in range 1 to 8. Was 9")
     }
 
     @Test
     fun `when second character in coordinate out of range should throw`() {
-        val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("A11") }
-        assertThat(e).hasMessageThat().isEqualTo("coordinate not in range 1 to 8. Was 11")
+        val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("1I") }
+        assertThat(e).hasMessageThat().isEqualTo("coordinate not in range A to H. Was I")
     }
 }

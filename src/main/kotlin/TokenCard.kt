@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import org.apache.logging.log4j.kotlin.logger
 
 @Serializable
 data class TokenCard(
@@ -8,11 +9,12 @@ data class TokenCard(
     private val tokens: Map<String, List<String>>
 ) {
     fun getToken(coordinate: String): String {
-        val first = coordinate.first().toString()
-        val second = coordinate.substringAfter(coordinate.first()).toInt()
-        check(("A".."H").contains(first)) { "coordinate not in range A to H. Was $first" }
-        check((1..8).contains(second)) { "coordinate not in range 1 to 8. Was $second" }
+        check(coordinate.length == 2) { "coordinate length should be equal to 2 but was: ${coordinate.length}" }
+        val first = coordinate.first().toString().toInt()
+        val second = coordinate.last().toString()
+        check((1..8).contains(first)) { "coordinate not in range 1 to 8. Was $first" }
+        check(("A".."H").contains(second)) { "coordinate not in range A to H. Was $second" }
 
-        return tokens.getValue(first).get(second - 1)
+        return tokens.getValue(second).get(first - 1)
     }
 }
