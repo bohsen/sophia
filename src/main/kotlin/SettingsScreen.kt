@@ -3,6 +3,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowRight
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -213,7 +214,7 @@ fun GeneralSettingItem(icon: ImageVector, mainText: String, subText: String, onC
                 }
             }
             Icon(
-                imageVector = Icons.Outlined.ArrowRight,
+                imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
             )
@@ -291,7 +292,7 @@ fun SupportItem(icon: ImageVector, mainText: String, onClick: () -> Unit) {
                 )
             }
             Icon(
-                imageVector = Icons.Outlined.ArrowRight,
+                imageVector = Icons.AutoMirrored.Outlined.ArrowRight,
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
             )
