@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowRight
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AccountBox
+import androidx.compose.material.icons.outlined.AccountTree
+import androidx.compose.material.icons.outlined.Contacts
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,65 +66,109 @@ fun HeaderText() {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProfileCardUI(onTokencardRead: () -> Unit) {
-    Card(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .padding(10.dp),
+            .padding(horizontal = 14.dp)
+            .padding(top = 10.dp)
+    ) {
+        Text(
+            text = "Profil",
+            fontFamily = Poppins,
+            color = SecondaryColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+        )
+        ProfileSettingItem(
+            icon = Icons.Outlined.AccountBox,
+            mainText = "Brugernavn",
+            subText = "Ikke logget ind",
+            onTokencardRead = onTokencardRead
+        )
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun ProfileSettingItem(icon: ImageVector, mainText: String, subText: String, onTokencardRead: () -> Unit) {
+    Card(
         backgroundColor = Color.White,
+        modifier = Modifier
+            .padding(bottom = 8.dp)
+            .fillMaxWidth(),
         elevation = 0.dp,
-        shape = Shapes.large
     ) {
         Row(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
-                Text(
-                    text = "Profil",
-                    fontFamily = Poppins,
-                    color = SecondaryColor,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Text(
-                    text = "Brugernavn",
-                    fontFamily = Poppins,
-                    color = Color.Gray,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-
-                Button(
-                    modifier = Modifier.padding(top = 10.dp),
-                    onClick = { onTokencardRead() },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = PrimaryColor
-                    ),
-                    contentPadding = PaddingValues(horizontal = 30.dp),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 2.dp
-                    ),
-                    shape = Shapes.medium
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                BadgedBox(
+                    badge = { Badge { Text("!") } })
+                {
+                    Box(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(shape = Shapes.medium)
+                            .background(LightPrimaryColor)
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.width(14.dp))
+                Column(
+                    modifier = Modifier.offset(y = (2).dp)
                 ) {
                     Text(
-                        text = "Token card",
+                        text = mainText,
                         fontFamily = Poppins,
                         color = SecondaryColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+
+                    Text(
+                        text = subText,
+                        fontFamily = Poppins,
+                        color = Color.Gray,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.offset(y = (-4).dp)
                     )
                 }
             }
-            Icon(
-                imageVector = Icons.Outlined.AccountBox,
-                contentDescription = "",
-                modifier = Modifier.height(120.dp)
-            )
+            Button(
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = { onTokencardRead() },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = PrimaryColor
+                ),
+                contentPadding = PaddingValues(horizontal = 30.dp),
+                elevation = ButtonDefaults.elevation(
+                    defaultElevation = 0.dp,
+                    pressedElevation = 2.dp
+                ),
+                shape = Shapes.medium
+            ) {
+                Text(
+                    text = "Token card",
+                    fontFamily = Poppins,
+                    color = SecondaryColor,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
         }
     }
 }
