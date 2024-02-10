@@ -1,6 +1,7 @@
 import Functions.Companion.readFile
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import java.io.File
 
 class LoginProcessParserTest {
 
@@ -27,7 +28,9 @@ class LoginProcessParserTest {
 
     @Test
     fun `when using valid tokencard should successfully login`() {
-        val tokenCard = TokenCardExtractor().extractTokenCard(readFile("TokenCard.txt"))
+        val card = File(this.javaClass.getResource("card-83329-2.pdf").file)
+
+        val tokenCard = TokenCardReader().readTokenCard(card)
         val parser = LoginProcessParser(tokenCard)
         assertThat(parser.parse()).isEqualTo(CommandOutput.Success("Log in success"))
     }

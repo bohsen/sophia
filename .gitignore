@@ -8,6 +8,7 @@ build/
 /src/main/resources/*.txt
 /src/test/resources/sophia.txt
 /src/test/resources/card-83329.pdf
+/src/test/resources/card-83329-2.pdf
 /src/test/resources/TokenCard.txt
 /src/test/resources/LoginCommand.txt
 

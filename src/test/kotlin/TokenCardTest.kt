@@ -30,7 +30,7 @@ class TokenCardTest {
     @Test
     fun `when coordinate lengt greater than 2 should throw`() {
         val e = assertThrows(IllegalStateException::class.java) { tokenCard.getToken("11A") }
-        assertThat(e).hasMessageThat().isEqualTo("coordinate length greater than 2 not allowed but was: 3")
+        assertThat(e).hasMessageThat().isEqualTo("coordinate length should be equal to 2 but was: 3")
     }
     @Test
     fun `when first character in coordinate out of range should throw`() {

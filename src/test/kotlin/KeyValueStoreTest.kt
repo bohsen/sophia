@@ -106,5 +106,6 @@ class KeyValueStoreTest {
         val expectedTokenCard = tokenCard
         settings.tokenCard = expectedTokenCard
         assertThat(settings.tokenCard).isEqualTo(expectedTokenCard)
+        assertThat(settings.tokenCard!!.getToken("1A")).isEqualTo("iuh7")
     }
 }
