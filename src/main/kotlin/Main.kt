@@ -1,25 +1,16 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.*
+import kotlinx.coroutines.flow.produceIn
 import org.apache.logging.log4j.kotlin.logger
-import theme.BackgroundColor
-import theme.md_theme_light_onPrimaryContainer
+import kotlin.io.path.Path
 
 fun main() = application {
     App()
@@ -29,14 +20,30 @@ fun main() = application {
 @Composable
 @Preview
 fun ApplicationScope.App() {
-    // val watchService = WatchService()
+    val keyValueStore = remember { KeyValueStore() }
+    val watchService = remember { WatchService() }
     val scope = rememberCoroutineScope()
-    val presenter = AppPresenter(scope)
-
 
     val showSettings = remember { mutableStateOf(false) }
     val openLogs = remember { mutableStateOf(false) }
 
+
+
+    LaunchedEffect(scope) {
+        keyValueStore.observablePath.collect { path ->
+            when {
+                path.isEmpty() -> showSettings.value = true
+                else -> with(watchService) {
+                    registerAll(Path(path))
+                    processEvents().collect { path ->
+                        if (path.endsWith("CopyComplete.txt")) {
+                            TODO("Extract directory path and start upload")
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     Tray(onOpenSettings = { showSettings.value = true },
         onOpenLogs = { openLogs.value = true })
