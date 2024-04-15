@@ -1,17 +1,17 @@
 [versions]
-kotlin = "1.9.23"
-compose-multiplatform = "1.6.1"
+kotlin = "2.0.0-RC1"
+compose-multiplatform = "1.6.2"
 coroutines = "1.8.0"
 kotlinx-serialization = "1.6.3"
 junit = "4.13.2"
 sqldelight = "2.0.1"
-log4j2 = "2.23.0"
+log4j2 = "2.23.1"
 log4j2-kotlin = "1.4.0"
-okio = "3.8.0"
-molecule = "1.4.1"
+okio = "3.9.0"
+molecule = "1.4.2"
 turbine = "1.1.0"
 multiplatform-settings = "1.1.1"
-truth = "1.4.0"
+truth = "1.4.2"
 itext = "8.0.3"
 
 [plugins]
