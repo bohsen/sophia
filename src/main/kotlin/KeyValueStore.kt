@@ -1,18 +1,16 @@
-import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.Settings
+import androidx.compose.runtime.Stable
+import com.russhwolf.settings.*
 import com.russhwolf.settings.coroutines.getStringFlow
 import com.russhwolf.settings.serialization.decodeValueOrNull
 import com.russhwolf.settings.serialization.encodeValue
-import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 
 interface KeyValueStore {
 
+    var path: String?
     val observablePath: Flow<String>
-    fun setPath(path: String)
 
     var userInfo: UserInfo?
 
@@ -41,6 +39,7 @@ data class Pipelines(val map: Map<String, Int>) {
 }
 
 @Serializable
+@Stable
 data class Pipeline(
     val pipeline_id: Int,
     val pipeline_name: String,
@@ -58,9 +57,15 @@ private class KeyValueStoreImpl(provider: () -> Settings) : KeyValueStore {
     private val settings: Settings by lazy { provider() }
     private val observableSettings: ObservableSettings by lazy { settings as ObservableSettings }
 
-    override fun setPath(path: String) {
-        settings["ObserverPath"] = path
-    }
+    override var path: String?
+        get() = settings["ObserverPath"]
+        set(value) {
+            if (value != null) {
+                settings["ObserverPath"] = value
+            } else {
+                settings.remove("ObserverPath")
+            }
+        }
 
     override val observablePath: Flow<String>
         get() = observableSettings.getStringFlow("ObserverPath", "")

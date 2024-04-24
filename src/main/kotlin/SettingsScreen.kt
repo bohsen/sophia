@@ -28,6 +28,7 @@ import theme.*
 @Preview
 @Composable
 fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
+    val keyValueStore = KeyValueStore()
     val openSetDirectory = remember { mutableStateOf(false) }
     val openPipelinesSetting = remember { mutableStateOf(false) }
     val tokenCardRead = remember { mutableStateOf(false) }
@@ -43,11 +44,15 @@ fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
     }
 
     if (tokenCardRead.value) {
-        FileChooserDialog("Vælg tokencard", {}, onCloseRequest = { tokenCardRead.value = false })
+        FileChooserDialog("Vælg tokencard", keyValueStore.path, {}, onCloseRequest = { tokenCardRead.value = false })
     }
 
     if (openSetDirectory.value) {
-        FileChooserDialog("Vælg mappe", {}, onCloseRequest = { openSetDirectory.value = false })
+        FileChooserDialog(
+            "Vælg mappe",
+            keyValueStore.path,
+            { path -> keyValueStore.path = path },
+            onCloseRequest = { openSetDirectory.value = false })
     }
 }
 

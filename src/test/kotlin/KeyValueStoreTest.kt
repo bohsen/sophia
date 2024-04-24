@@ -22,6 +22,13 @@ class KeyValueStoreTest {
     private val tokenCard = TokenCard(14567, "Test Peter Testesen", "Feb 28, 2025", tokenMap)
 
     @Test
+    fun `given path is set then getPath() should return path`() {
+        val userHome = "/Users/sandy"
+        settings.path = userHome
+        assertThat(settings.path).isEqualTo(userHome)
+    }
+
+    @Test
     fun `default path should be emitted when not set`() = runTest {
         settings.observablePath.test {
             assertEquals("", awaitItem())
@@ -31,7 +38,7 @@ class KeyValueStoreTest {
     @Test
     fun `keyValueStore should contain directory path setting`() = runTest {
         val userHome = "/Users/sandy"
-        settings.setPath(userHome)
+        settings.path = userHome
 
         settings.observablePath.test {
             assertEquals(userHome, awaitItem())
@@ -43,7 +50,7 @@ class KeyValueStoreTest {
         settings.observablePath.test {
             assertEquals("", awaitItem())
             val userHome = "/Users/sandy"
-            settings.setPath(userHome)
+            settings.path = userHome
             assertEquals(userHome, awaitItem())
         }
     }
@@ -51,7 +58,7 @@ class KeyValueStoreTest {
     @Test
     fun `reset should clear KeyValueStore`() = runTest {
         val userHome = "/Users/sandy"
-        settings.setPath(userHome)
+        settings.path = userHome
         settings.observablePath.test {
             assertEquals(userHome, awaitItem())
             settings.reset()

@@ -13,7 +13,8 @@ import javax.swing.filechooser.FileSystemView
 @Composable
 fun FrameWindowScope.FileChooserDialog(
     title: String,
-    onResult: (result: File) -> Unit,
+    path: String?,
+    onResult: (path: String) -> Unit,
     onCloseRequest: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -22,20 +23,22 @@ fun FrameWindowScope.FileChooserDialog(
 
             logger.info("Opening file-chooser...")
             JFileChooser(FileSystemView.getFileSystemView()).apply {
-                currentDirectory = File(System.getProperty("user.dir"))
+                currentDirectory = if (path != null) {
+                    File(path)
+                } else {
+                    File(System.getProperty("user.dir"))
+                }
                 dialogTitle = title
                 fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
                 isAcceptAllFileFilterUsed = true
                 selectedFile = null
-                currentDirectory = null
                 when (showOpenDialog(null)) {
                     JFileChooser.APPROVE_OPTION -> {
                         logger.info { "Selected: $selectedFile" }
-                        onResult(selectedFile)
+                        onResult(selectedFile.toString())
                     }
                     else -> {
                         logger.info { "Cancel filechooser" }
-                        onResult(File(""))
                     }
                 }
                 onCloseRequest()
