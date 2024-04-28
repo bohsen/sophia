@@ -66,10 +66,13 @@ class LoginProcessParser(private val tokenCard: TokenCard) : ProcessHandler.Proc
         val exitCode = process.waitFor(5L, TimeUnit.SECONDS)
 
         return if (error.isEmpty() && exitCode) {
+            logger.info { logs }
             CommandOutput.Success(logs.first())
         } else if (error.isNotEmpty() && exitCode) {
-            CommandOutput.Error(error.toString())
+            logger.error { error }
+            CommandOutput.Error(error.first())
         } else {
+            logger.error { logs }
             CommandOutput.FailedCommand(logs.toString())
         }
     }

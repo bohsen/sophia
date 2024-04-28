@@ -1,5 +1,6 @@
 import okio.buffer
 import okio.source
+import org.apache.logging.log4j.kotlin.logger
 import java.util.*
 
 
@@ -70,24 +71,20 @@ private class DefaultProcessParser(vararg command: String) : ProcessHandler.Proc
 
         val process = builder.command(command).start()
 
-        var logs = ""
-        process.inputStream.reader().buffered().use { stream ->
-            stream.lines().forEach { logs += it }
-        }
-
-        var error = ""
-        process.errorStream.reader().buffered().use { stream ->
-            stream.lines().forEach { error += it }
-        }
+        val logs = process.inputStream.bufferedReader().lines().toList()
+        val error = process.errorStream.bufferedReader().lines().toList()
 
         val exitCode = process.onExit().get().exitValue()
 
         return if (error.isEmpty() && exitCode == 0) {
-            CommandOutput.Success(logs)
+            logger.info { logs }
+            CommandOutput.Success(logs.first())
         } else if (error.isNotEmpty() && exitCode == 0) {
-            CommandOutput.Error(error)
+            logger.error { error }
+            CommandOutput.Error(error.first())
         } else {
-            CommandOutput.FailedCommand(logs)
+            logger.error { logs }
+            CommandOutput.FailedCommand(logs.toString())
         }
     }
 }

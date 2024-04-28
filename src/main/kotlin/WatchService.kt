@@ -122,4 +122,15 @@ class WatchService(private val watcher: WatchService = FileSystems.getDefault().
             }
         }
     }.flowOn(Dispatchers.IO).buffer()
+
+    /**
+     * Unregister all directories and subdirectories, with the
+     * WatchService.
+     */
+    fun unRegisterAll() {
+        logger.info {
+            keys.clear()
+            "unRegisterAll() finished."
+        }
+    }
 }

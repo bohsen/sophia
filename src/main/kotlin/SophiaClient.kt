@@ -22,12 +22,25 @@ class SophiaClient(
         return processHandler.execute(getPythonExe(), "--version")
     }
 
-    fun login(loginProcessParser: LoginProcessParser): CommandOutput {
+    fun login(): CommandOutput {
         logger.info {
             "Login started..."
         }
+        val tokenCard = checkNotNull(settings.tokenCard)
+        val parser = LoginProcessParser(tokenCard)
 
-        return processHandler.execute(loginProcessParser)
+        return processHandler.execute(parser)
+    }
+
+    fun logout(): CommandOutput {
+        logger.info {
+            "logout() started..."
+        }
+        return processHandler.execute(
+            getPythonExe(),
+            resolvePythonScriptPath(),
+            "logout"
+        )
     }
 
     fun getUserInfo(): CommandOutput {
@@ -41,7 +54,6 @@ class SophiaClient(
         )
     }
 
-
     fun getPipelines(): CommandOutput {
         logger.info {
             "getPipelines() started..."
@@ -49,7 +61,8 @@ class SophiaClient(
         return processHandler.execute(
             getPythonExe(),
             resolvePythonScriptPath(),
-            "pipeline --list"
+            "pipeline",
+            "--list"
         )
     }
 

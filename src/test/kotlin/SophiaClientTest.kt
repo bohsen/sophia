@@ -9,7 +9,9 @@ import org.junit.rules.TemporaryFolder
 class SophiaClientTest {
     private val fakeProcessHandler = FakeProcessHandler()
     private val provider = { MapSettings() }
-    private val settings = KeyValueStore(provider)
+    private val settings = KeyValueStore(provider).apply {
+        tokenCard = TokenCardExtractor().extractTokenCard(readFile("TokenCard-2.txt"))
+    }
     private val service = SophiaClient(fakeProcessHandler, settings)
     private val tokenMap: Map<String, List<String>> = mapOf(
         "A" to "iuh7 9iik lkmd ssuu sbna wyyh mkki aayh".split(" "),
@@ -49,17 +51,35 @@ class SophiaClientTest {
     @Test
     fun `when login with valid user should log in`() {
         val expectedCommandOutput = CommandOutput.Success("Log in success")
-
-        val tokenCard = TokenCardExtractor().extractTokenCard(readFile("TokenCard.txt"))
-        val parser = LoginProcessParser(tokenCard)
-        assertThat(service.login(parser)).isEqualTo(expectedCommandOutput)
+        assertThat(service.login()).isEqualTo(expectedCommandOutput)
     }
 
     @Test
-    fun `when requesting userinfo should return userinfo`() {
-        val expectedCommandOutput = CommandOutput.Success("")
+    fun `when login with invalid user should fail`() {
+        settings.tokenCard = fakeTokenCard
+        val expectedCommandOutput = CommandOutput.Error("Log in failure")
+        assertThat(service.login()).isEqualTo(expectedCommandOutput)
+    }
+
+    @Test
+    fun `given user logged in when logging out then user is logged out`() {
+        val expectedCommandOutput = CommandOutput.Success("User logged out")
+        val logoutResult = service.logout()
+        assertThat(logoutResult).isEqualTo(expectedCommandOutput)
+    }
+
+    @Test
+    fun `given user logged in when requesting userinfo should return userinfo`() {
+        service.login()
         val userInfoResult = service.getUserInfo()
-        assertThat(userInfoResult).isEqualTo(expectedCommandOutput)
+        assertThat(userInfoResult).isInstanceOf(CommandOutput.Success::class.java)
+    }
+
+    @Test
+    fun `given user logged in when requesting pipelines then pipelines are returned`() {
+        service.login()
+        val userInfoResult = service.getPipelines()
+        assertThat(userInfoResult).isInstanceOf(CommandOutput.Success::class.java)
     }
 
     class FakeProcessHandler : ProcessHandler {

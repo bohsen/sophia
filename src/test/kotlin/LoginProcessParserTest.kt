@@ -28,7 +28,7 @@ class LoginProcessParserTest {
 
     @Test
     fun `when using valid tokencard should successfully login`() {
-        val card = File(this.javaClass.getResource("card-83329-2.pdf").file)
+        val card = File(this.javaClass.getResource("TokenCardValid.pdf").file)
 
         val tokenCard = TokenCardReader().readTokenCard(card)
         val parser = LoginProcessParser(tokenCard)

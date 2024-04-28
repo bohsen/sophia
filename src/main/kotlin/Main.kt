@@ -1,4 +1,3 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.input.key.Key
@@ -8,7 +7,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import kotlinx.coroutines.flow.produceIn
 import org.apache.logging.log4j.kotlin.logger
 import kotlin.io.path.Path
 
@@ -18,7 +16,6 @@ fun main() = application {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-@Preview
 fun ApplicationScope.App() {
     val keyValueStore = remember { KeyValueStore() }
     val watchService = remember { WatchService() }
@@ -27,13 +24,12 @@ fun ApplicationScope.App() {
     val showSettings = remember { mutableStateOf(false) }
     val openLogs = remember { mutableStateOf(false) }
 
-
-
     LaunchedEffect(scope) {
         keyValueStore.observablePath.collect { path ->
             when {
                 path.isEmpty() -> showSettings.value = true
                 else -> with(watchService) {
+                    unRegisterAll()
                     registerAll(Path(path))
                     processEvents().collect { path ->
                         if (path.endsWith("CopyComplete.txt")) {
