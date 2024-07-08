@@ -28,12 +28,12 @@ interface KeyValueStore {
 data class UserInfo(val userId: Int, val username: String, val clientId: Int)
 
 @Serializable
-data class Pipelines(val map: Map<String, Int>) {
+data class Pipelines(val map: Map<String, Pipeline>) {
     operator fun plus(pipelines: Pipelines): Pipelines {
         return Pipelines(map + pipelines.map)
     }
 
-    operator fun get(key: String): Int? {
+    operator fun get(key: String): Pipeline? {
         return map[key]
     }
 }
@@ -42,14 +42,14 @@ data class Pipelines(val map: Map<String, Int>) {
 @Stable
 data class Pipeline(
     val pipeline_id: Int,
-    val pipeline_name: String,
-    val analysis_type: String,
-    val analysis_type_id: Int,
-    val kit: String,
-    val sequencer_id: Int,
-    val sequencer: String,
-    val experiment_type: String,
-    val pairend: Boolean
+    val pipeline_name: String? = null,
+    val analysis_type: String? = null,
+    val analysis_type_id: Int? = null,
+    val kit: String? = null,
+    val sequencer_id: Int? = null,
+    val sequencer: String? = null,
+    val experiment_type: String? = null,
+    val pairend: Boolean? = null
 )
 
 @OptIn(ExperimentalSettingsApi::class, ExperimentalSerializationApi::class)

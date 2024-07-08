@@ -1,3 +1,4 @@
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.input.key.Key
@@ -7,11 +8,21 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import kotlinx.coroutines.CoroutineScope
 import org.apache.logging.log4j.kotlin.logger
 import kotlin.io.path.Path
 
-fun main() = application {
-    App()
+@Preview
+@Composable
+fun MyScreenPreview() {
+    application { App() }
+}
+
+fun main() {
+    //System.setProperty("java.awt.headless", "true");
+    application {
+        App()
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -24,22 +35,7 @@ fun ApplicationScope.App() {
     val showSettings = remember { mutableStateOf(false) }
     val openLogs = remember { mutableStateOf(false) }
 
-    LaunchedEffect(scope) {
-        keyValueStore.observablePath.collect { path ->
-            when {
-                path.isEmpty() -> showSettings.value = true
-                else -> with(watchService) {
-                    unRegisterAll()
-                    registerAll(Path(path))
-                    processEvents().collect { path ->
-                        if (path.endsWith("CopyComplete.txt")) {
-                            TODO("Extract directory path and start upload")
-                        }
-                    }
-                }
-            }
-        }
-    }
+    observeFileChanges(scope, keyValueStore, showSettings, watchService)
 
     Tray(onOpenSettings = { showSettings.value = true },
         onOpenLogs = { openLogs.value = true })
@@ -61,6 +57,31 @@ fun ApplicationScope.App() {
             }
         ) {
             SettingsScreen(onCloseRequest = { showSettings.value = false })
+        }
+    }
+}
+
+@Composable
+private fun observeFileChanges(
+    scope: CoroutineScope,
+    keyValueStore: KeyValueStore,
+    showSettings: MutableState<Boolean>,
+    watchService: WatchService
+) {
+    LaunchedEffect(scope) {
+        keyValueStore.observablePath.collect { path ->
+            when {
+                path.isEmpty() -> showSettings.value = true
+                else -> with(watchService) {
+                    unRegisterAll()
+                    registerAll(Path(path))
+                    processEvents().collect { path ->
+                        if (path.endsWith("CopyComplete.txt")) {
+                            TODO("Extract directory path and start upload")
+                        }
+                    }
+                }
+            }
         }
     }
 }

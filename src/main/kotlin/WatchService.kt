@@ -40,7 +40,7 @@ class WatchService(private val watcher: WatchService = FileSystems.getDefault().
      */
     @OptIn(ExperimentalPathApi::class)
     fun registerAll(start: Path) {
-        logger.info("RegisterAll started.")
+        logger.info("RegisterAll started listening to $start")
         start.walk(PathWalkOption.INCLUDE_DIRECTORIES).forEach {
             if (it.isDirectory()) {
                 register(it)

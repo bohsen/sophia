@@ -1,0 +1,156 @@
+[
+  {
+    "pipeline_id": 31,
+    "pipeline_name": "NO_PIPELINE",
+    "analysis_type": "NO_PIPELINE",
+    "analysis_type_id": 7000,
+    "kit": "Multiplicom_MASTR_assay",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "germline",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 2328,
+    "pipeline_name": "Custom Solid Tumor Solution",
+    "analysis_type": "CSTS_D_v1",
+    "analysis_type_id": 231507000,
+    "kit": "IDT",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 4427,
+    "pipeline_name": "SOPHiA DDM GIInger Genomic Integrity Solution",
+    "analysis_type": "GI_v1",
+    "analysis_type_id": 443207000,
+    "kit": "IDT",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 7125,
+    "pipeline_name": "Custom Solid Tumor Solution",
+    "analysis_type": "CSTS_D_v2",
+    "analysis_type_id": 595807000,
+    "kit": "IDT",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 1408,
+    "pipeline_name": "SOPHiA DDM Mini Homologous Recombination Deficiency Solution v1",
+    "analysis_type": "miniHRS_v1",
+    "analysis_type_id": 138907000,
+    "kit": "IDT",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 159,
+    "pipeline_name": "NO_PIPELINE",
+    "analysis_type": "NO_PIPELINE",
+    "analysis_type_id": 7000,
+    "kit": "Multiplicom_MASTR_assay",
+    "sequencer_id": 1506000,
+    "sequencer": "ILLUMINA_MiniSeq",
+    "experiment_type": "germline",
+    "pairend": false
+  },
+  {
+    "pipeline_id": 6670,
+    "pipeline_name": "Custom Myeloid Solution",
+    "analysis_type": "CMYS_R_v1",
+    "analysis_type_id": 666907000,
+    "kit": "IDT",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 4388,
+    "pipeline_name": "SOPHiA DDM RNAtarget Oncology Solution",
+    "analysis_type": "SRS_v1",
+    "analysis_type_id": 438607000,
+    "kit": "IDT",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 5290,
+    "pipeline_name": "SOPHiA DDM RNAtarget Oncology Solution",
+    "analysis_type": "ROS_v1",
+    "analysis_type_id": 531007000,
+    "kit": "IDT",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 2276,
+    "pipeline_name": "SOPHiA DDM Solid Tumor Plus Solution",
+    "analysis_type": "STS_plus_v1",
+    "analysis_type_id": 211407000,
+    "kit": "IDT",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 1718,
+    "pipeline_name": "SOPHiA DDM Myeloid Solution (MYS_v1)",
+    "analysis_type": "MYS_v1",
+    "analysis_type_id": 9507000,
+    "kit": "IDT",
+    "sequencer_id": 1506000,
+    "sequencer": "ILLUMINA_MiniSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 4387,
+    "pipeline_name": "SOPHiA DDM RNAtarget Oncology Solution",
+    "analysis_type": "SRS_v1",
+    "analysis_type_id": 438607000,
+    "kit": "IDT",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 5959,
+    "pipeline_name": "Custom Solid Tumor Solution",
+    "analysis_type": "CSTS_D_v2",
+    "analysis_type_id": 595807000,
+    "kit": "IDT",
+    "sequencer_id": 606000,
+    "sequencer": "ILLUMINA_MiSeq",
+    "experiment_type": "somatic",
+    "pairend": true
+  },
+  {
+    "pipeline_id": 44,
+    "pipeline_name": "NO_PIPELINE",
+    "analysis_type": "NO_PIPELINE",
+    "analysis_type_id": 7000,
+    "kit": "Multiplicom_MASTR_assay",
+    "sequencer_id": 1306000,
+    "sequencer": "ILLUMINA_NextSeq",
+    "experiment_type": "germline",
+    "pairend": true
+  }
+]

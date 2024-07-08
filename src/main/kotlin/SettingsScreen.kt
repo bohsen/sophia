@@ -1,4 +1,5 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -23,9 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.FrameWindowScope
 import theme.*
 
-
 @ExperimentalMaterialApi
-@Preview
 @Composable
 fun FrameWindowScope.SettingsScreen(onCloseRequest: () -> Unit) {
     val keyValueStore = KeyValueStore()
@@ -173,7 +172,6 @@ fun ProfileSettingItem(icon: ImageVector, mainText: String, subText: String, onT
                     fontWeight = FontWeight.Bold
                 )
             }
-
         }
     }
 }
@@ -207,7 +205,7 @@ fun GeneralOptionsUI(
         GeneralSettingItem(
             icon = Icons.Outlined.AccountTree,
             mainText = "Pipelines",
-            subText = "Konfiguration af pipelines mapninger"
+            subText = "Konfiguration af pipelines"
         ) { onOpenPipelinesSetting() }
     }
 }
@@ -245,7 +243,7 @@ fun GeneralSettingItem(icon: ImageVector, mainText: String, subText: String, onC
 
                 Spacer(modifier = Modifier.width(14.dp))
                 Column(
-                    modifier = Modifier.offset(y = (2).dp)
+                    modifier = Modifier.offset(y = 2.dp)
                 ) {
                     Text(
                         text = mainText,
@@ -270,7 +268,6 @@ fun GeneralSettingItem(icon: ImageVector, mainText: String, subText: String, onC
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
             )
-
         }
     }
 }
@@ -349,5 +346,106 @@ fun SupportItem(icon: ImageVector, mainText: String, onClick: () -> Unit) {
                 modifier = Modifier.size(16.dp)
             )
         }
+    }
+}
+
+@Composable
+fun PipelinesSettingUI() {
+    Surface(color = BackgroundColor, modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 14.dp)
+                .padding(top = 10.dp)
+        ) {
+            Card(
+                backgroundColor = Color.White,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .fillMaxWidth(),
+                elevation = 0.dp,
+            ) {
+                Column {
+                    SettingsHeader("Mapning", "Forklarende tekst")
+                    PipelineItem(Pair("LRT", Pipeline(1811)), {})
+                    PipelineItem(Pair("QGT", Pipeline(1811)), {})
+                    PipelineItem(Pair("KSK", Pipeline(1811)), {})
+
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SettingsHeader(mainText: String, subText: String) {
+    Row(
+        modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            modifier = Modifier.offset(y = 2.dp)
+        ) {
+            Text(
+                text = mainText,
+                fontFamily = Poppins,
+                color = SecondaryColor,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+            )
+
+            Text(
+                text = subText,
+                fontFamily = Poppins,
+                color = Color.Gray,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.offset(y = (-4).dp)
+            )
+        }
+
+    }
+}
+
+
+@Composable
+fun PipelineItem(pipeline: Pair<String, Pipeline>, onPipelineClick: (String) -> Unit) {
+    Card(border = BorderStroke(1.dp, PrimaryColor)) {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 8.dp, horizontal = 14.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(0.25F),
+                text = pipeline.first
+            )
+            Text(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(0.75F),
+                text = "Testpipeline"
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PipelineItemPreview() {
+    PipelinesSettingUI()
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview
+@Composable
+fun SupportItemPreview() {
+    Column {
+        GeneralOptionsUI({}, {})
+        SupportOptionsUI()
     }
 }
